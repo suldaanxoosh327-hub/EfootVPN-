@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safar Travel Agency</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f4f8fc;color:#183047}
+header,footer{background:#082d4d;color:white;text-align:center;padding:24px}
+.logo{font-size:29px;color:#52d6dc;font-weight:bold}
+nav{margin-top:15px}
+nav a{color:white;text-decoration:none;margin:8px;display:inline-block}
+.hero{background:linear-gradient(120deg,#073454,#1686b7);color:white;text-align:center;padding:100px 20px}
+.hero h1{font-size:38px;margin-bottom:20px}
+.hero p{line-height:1.8}
+.btn{display:inline-block;background:#50d5d5;color:#073454;padding:14px 25px;border-radius:25px;text-decoration:none;margin-top:20px;font-weight:bold}
+section{padding:55px 20px;text-align:center}
+h2{color:#0b4269;margin-bottom:20px}
+.about{max-width:700px;margin:auto;line-height:1.9}
+.services{display:flex;flex-wrap:wrap;justify-content:center;gap:18px}
+.service{background:white;padding:25px;border-radius:14px;width:220px;box-shadow:0 5px 18px #0001}
+.contact{background:#e5f1f8}
+form,#shareBox,#success{background:white;max-width:520px;margin:20px auto;padding:25px;border-radius:16px}
+input,textarea{width:100%;padding:15px;margin:10px 0;border:1px solid #ccd9e2;border-radius:9px;font-size:16px}
+textarea{min-height:110px}
+button{width:100%;padding:15px;background:#087eaa;color:white;border:0;border-radius:9px;font-size:17px;cursor:pointer;margin-top:10px}
+#shareBox,#success{display:none}
+#shareBtn{background:#168b50}
+#count{font-size:25px;color:#087eaa;margin:15px}
+#success{background:#e3f8e9;color:#14783a;line-height:1.8}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">✈ SAFAR TRAVEL</div>
+<nav>
+<a href="#home">Home</a>
+<a href="#about">About</a>
+<a href="#services">Services</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
+
+<div class="hero" id="home">
+<h1>Explore The World</h1>
+<p>Welcome to Safar Travel Agency. We help you plan your journeys, discover new destinations and enjoy a comfortable travel experience.</p>
+<a href="#services" class="btn">Explore Services</a>
+</div>
+
+<section id="about">
+<h2>About Our Company</h2>
+<div class="about">
+Safar Travel helps travelers learn about travel services, flight bookings and destinations. Our goal is to make your journey simple, comfortable and memorable.
+</div>
+</section>
+
+<section id="services">
+<h2>Our Services</h2>
+<div class="services">
+<div class="service"><h3>✈ Flight Booking</h3><p>Flight booking assistance.</p></div>
+<div class="service"><h3>🌍 Destinations</h3><p>Discover beautiful places.</p></div>
+<div class="service"><h3>🧳 Travel Support</h3><p>Travel questions and assistance.</p></div>
+</div>
+</section>
+
+<section class="contact" id="contact">
+<h2>Contact Us</h2>
+<p>Write your two messages below.</p>
+
+<form id="contactForm">
+<input id="name" type="text" placeholder="Your Name" required>
+<textarea id="message1" placeholder="First Message" required></textarea>
+<textarea id="message2" placeholder="Second Message" required></textarea>
+<button type="submit">Send Message</button>
+</form>
+
+<div id="shareBox">
+<h2>Share With Friends</h2>
+<p>Share our website with your friends.</p>
+<div id="count">0 / 5</div>
+<button id="shareBtn">Share Website</button>
+<p id="shareStatus" style="margin-top:15px"></p>
+</div>
+
+<div id="success">
+<div style="font-size:45px">✓</div>
+<h2>Waad ku guulaysatay!</h2>
+<p>Waad ku guulaysatay inaad nala soo hadasho.</p>
+<p>Thank you for contacting us!</p>
+</div>
+</section>
+
+<footer>
+© 2026 Safar Travel Agency<br><br>
+Your Journey, Our Priority.
+</footer>
+
+<script>
+// WhatsApp number
+const phone = "252636200242";
+
+const form = document.getElementById("contactForm");
+const shareBox = document.getElementById("shareBox");
+const success = document.getElementById("success");
+const count = document.getElementById("count");
+const shareBtn = document.getElementById("shareBtn");
+
+let shareCount = Number(sessionStorage.getItem("shareCount") || 0);
+
+function updateCount(){
+  count.textContent = shareCount + " / 5";
+
+  if(shareCount >= 5){
+    shareBox.style.display = "none";
+    success.style.display = "block";
+  }
+}
+
+form.addEventListener("submit",function(e){
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const m1 = document.getElementById("message1").value;
+  const m2 = document.getElementById("message2").value;
+
+  const message =
+    "NEW WEBSITE MESSAGE\n\n" +
+    "Name: " + name + "\n\n" +
+    "First Message:\n" + m1 + "\n\n" +
+    "Second Message:\n" + m2;
+
+  const url = "https://wa.me/" + phone +
+    "?text=" + encodeURIComponent(message);
+
+  window.open(url,"_blank");
+
+  shareBox.style.display = "block";
+  shareBox.scrollIntoView({behavior:"smooth"});
+  updateCount();
+});
+
+shareBtn.addEventListener("click",async function(){
+
+  const data = {
+    title:"Safar Travel Agency",
+    text:"Visit Safar Travel Agency website!",
+    url:window.location.href
+  };
+
+  try{
+    if(navigator.share){
+      await navigator.share(data);
+
+      shareCount++;
+      sessionStorage.setItem("shareCount",shareCount);
+
+      document.getElementById("shareStatus").textContent =
+        "Share started. " + shareCount + " / 5";
+
+      updateCount();
+    }else{
+      await navigator.clipboard.writeText(
+        data.text + " " + data.url
+      );
+
+      document.getElementById("shareStatus").textContent =
+        "Website link copied. Share it with friends.";
+    }
+  }catch(error){
+    document.getElementById("shareStatus").textContent =
+      "Sharing cancelled. Try again.";
+  }
+});
+
+updateCount();
+</script>
+
+</body>
+</html>
